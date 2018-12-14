@@ -1,0 +1,271 @@
+﻿
+@using EmployeeSearch.Models
+@{
+    ViewBag.Title = "Home Page";
+    Dashboard dashboard = Model;
+
+}
+
+<div id="container" style="overflow-x: hidden; overflow-y: auto">
+    <div id="spinner" class="spinner"></div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="gender" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="birthYear" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-12">
+            <div id="dept" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-12">
+            <div id="joinDate" style="width: 100%; height: 0px;"></div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+
+    <script src="~/Scripts/plugins/eChart/echarts.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/shine.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/infographic.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/macarons.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/roma.js"></script>
+    <script type="text/javascript">
+        var containerHeight = $(window).height() - 180;
+        var genderData = [];
+        var birthYearData = [];
+        var birthYear = [];
+
+        var deptData = [];
+        var dept = [];
+        var joinDateData = [];
+        var joinDate = [];
+        $(function () {
+            $('#container').css('max-height', containerHeight + 58);
+            $('#container').css('min-height', containerHeight + 58);
+            $('#container').css('height', containerHeight+58);
+            $(window).resize(function(e) {
+                window.setTimeout(function() {
+                    containerHeight = $(window).height() - 180;
+                    $('#container').css('max-height', containerHeight + 58);
+                    $('#container').css('min-height', containerHeight + 58);
+                    $('#container').css('height',containerHeight+58);
+                        //$('#grid').height(gridHeight);
+                        //$('.k-grid-content').height(gridHeight - 68);
+                    },
+                    200);
+            });
+            // 基于准备好的dom，初始化echarts实例
+
+            loadChartsData();
+
+
+        });
+        function loadChartsData() {
+            $('#spinner').css('display','block');
+            $.ajax({
+                async: true,
+                data: 'json',
+                type: 'post',
+                url: "@Url.Action("GetSummaryData")",
+                success: function(data) {
+                    var responseData = data;
+                    $.each(responseData.SummaryByGender,
+                        function(i, v) {
+                            var tmpObj = {
+                                name: $.trim(v.Key) == 1 ? "男" : "女",
+                                value: $.trim(v.Value)
+                            };
+                            genderData.push(tmpObj);
+
+                        });
+                    $.each(responseData.SummaryByYear,
+                        function(i, v) {
+                            birthYear.push(v.Key);
+                            birthYearData.push(v.Value);
+
+
+                        });
+                    $.each(responseData.SummaryByDept,
+                        function(i, v) {
+                            dept.push(v.Key);
+                            deptData.push(v.Value);
+
+
+                        });
+                    $.each(responseData.SummaryByJoinDate,
+                        function(i, v) {
+                            joinDate.push(v.Key);
+                            joinDateData.push(v.Value);
+
+
+                        });
+                    $('#gender,#dept,#birthYear,#joinDate').css('height', '400px');
+                    generateCharts();
+                },
+                complete: function() {
+                    $('#spinner').css('display','none');
+                }
+            });
+        }
+        function generateCharts() {
+            // 使用刚指定的配置项和数据显示图表。
+            var genderChart = echarts.init(document.getElementById('gender'));
+            var birthYearChart = echarts.init(document.getElementById('birthYear'),'shine');
+            var deptChart = echarts.init(document.getElementById('dept'));
+            var joinDateChart = echarts.init(document.getElementById('joinDate'),'macarons');
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: "GroupBy Gender",
+                    x: 'center',
+                    y: 'bottom'
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: ['50%', '70%'],
+                        roseType: 'angle',
+                        data: genderData,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true, //开启显示
+                                    position: 'top', //在上方显示
+                                    textStyle: { //数值样式
+                                        color: 'black',
+                                        fontSize: 10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+
+            var birthYearOption = {
+                title: {
+                    text: 'GroupBy BirthYear',
+                    x: 'center',
+                    y: 'bottom'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: birthYear,
+                        nameRotate: 90,
+                        nameLocation:'start'
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'BirthYear',
+                        type: 'bar',
+                        data: birthYearData
+                    }
+                ]
+            };
+            var deptOption = {
+                title: {
+                    text: 'GroupBy Dept',
+                    x: 'center',
+                    y: 'bottom'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: dept
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Dept',
+                        type: 'bar',
+                        data: deptData,
+                    }
+                ]
+            };
+            var joinDateOption = {
+                title: {
+                    text: 'GroupBy JoinDate',
+                    x: 'center',
+                    y: 'bottom'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: joinDate
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: 'Dept',
+                        type: 'bar',
+                        data: joinDateData,
+                    }
+                ]
+            };
+            genderChart.setOption(option);
+            birthYearChart.setOption(birthYearOption);
+            deptChart.setOption(deptOption);
+            joinDateChart.setOption(joinDateOption);
+        }
+    </script>
+}
