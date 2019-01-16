@@ -1,0 +1,67 @@
+﻿
+@using EmployeeSearch.DB
+
+@{
+    ViewBag.Title = "MorningReading";
+    List<Card> cards = (List<Card>)Model.Cards;
+}
+<style>
+    ol li {
+        margin-bottom: 20px;
+    }
+
+    ul li {
+        list-style: none;
+        margin: 0;
+    }
+</style>
+<div class="row readingContainer" id="listMode">
+    <div class="col-lg-12">
+        <ol>
+            @foreach (var card in cards)
+            {
+                <li>
+                    <div  style="vertical-align: middle">
+
+                        <a href="javascript:void(0);" onclick="GetContent(this)" data-url="@card.Url" data-title="@card.Title"><img style="width: 60px; height: 60px; border-radius: 3px;" src="@card.Image" class="pull-left"/></a>
+                            <ul>
+                                <li>@card.Title</li>
+                                <li>@card.Summary</li>
+                                @*<audio src="@card.AudioUrl" type="audio/mpeg"></audio>*@
+                                <li class="dateString" data-value="@card.Date"></li>
+                            </ul>
+                            
+
+                    </div>
+
+                </li>
+            }
+        </ol>
+    </div>
+</div>
+<div class="readingContainer" id="platMode" style="display: none">
+    <div class="row">
+        @foreach (Card card in cards)
+        {
+            <div class="col-lg-3 col-md-3" style="margin-bottom: 30px;">
+                <div class="card" style=" box-shadow: 0 2px 5px #d3d3d3;cursor: pointer">
+                    <img class="header card-img-top" src="@card.Image" />
+                    <div class="card-body">
+                        <h5 class="card-title text-right">@card.Title</h5>
+                        <h6 class="card-title text-right">@card.Summary</h6>
+                        <a href="@card.Url" class="card-link"><i class="fa fa-arrow-circle-o-right"></i></a>
+                        <audio src="@card.AudioUrl" type="audio/mpeg"></audio>
+                        <span class="pull-right dateString" data-value="@card.Date"></span>
+                    </div>
+
+                    @*<div class="card-body">
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                        </div>*@
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+

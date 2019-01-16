@@ -74,11 +74,12 @@
                     $('#spinner').css('display', 'none');
                     $('#contactContainer').css('visibility', 'visible');
                     $('#contactTable').DataTable(
-                        {                      
+                        {
                             "order": [[8, 'desc']],
                             "order": [[4, 'asc']]
                         }
                     );
+                    setTimeout(getAllEmployeePhoto(), 100);
                 });
         }
         function mouseHover(obj, isMouseOver)
@@ -98,6 +99,25 @@
             if (keyCode == 13) {
                 loadContactData();
             }
+        }
+
+        function getAllEmployeePhoto() {
+            $.ajax({
+                url: "@Url.Action("GetAllEmployeePhotoResult")",
+                dataType: 'json',
+                type: 'POST',
+                success: function(data) {
+                    //var responseData = JSON.parse(data);
+                    var responseData = data;
+                    if (responseData.length > 0) {
+                        $('.header').attr("src", "/Content/imags/user-default.svg");
+                        $(responseData).each(function(i, v) {
+                            $('.' + v.Eid).attr("src", "/Content/Employee_Images/" + v.Eid + ".jpg");
+                        });
+                    }
+
+                }
+            });
         }
 
     </script>

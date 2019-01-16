@@ -49,6 +49,7 @@ C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\roslyn\vbc.rsp
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\roslyn\VBCSCompiler.exe
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\Antlr3.Runtime.dll
+C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.DB.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.Interface.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EntityFramework.dll
@@ -73,6 +74,8 @@ C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\System.Web.WebPag
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\System.Web.WebPages.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\System.Web.WebPages.Razor.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\WebGrease.dll
+C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.pdb
+C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.dll.config
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.DB.pdb
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.DB.dll.config
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.Interface.pdb
@@ -107,6 +110,3 @@ C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\obj\Debug\EmployeeSea
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\obj\Debug\EmployeeSearch.csproj.CopyComplete
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\obj\Debug\EmployeeSearch.dll
 C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\obj\Debug\EmployeeSearch.pdb
-C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.dll
-C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.pdb
-C:\Users\E01851\source\repos\EmployeeSearch\EmployeeSearch\bin\EmployeeSearch.BLL.dll.config

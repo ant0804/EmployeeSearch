@@ -160,6 +160,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Dashboard.cs" />
+    <Compile Include="Models\VPS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -454,6 +455,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\plugins\DateFormat\DateHelpler.js" />
     <Content Include="Scripts\plugins\eChart\echarts.js" />
     <Content Include="Scripts\plugins\eChart\echarts.min.js" />
     <Content Include="Scripts\plugins\eChart\theme\infographic.js" />
@@ -468,7 +470,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -492,9 +496,13 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Home\_Contact.cshtml" />
+    <Content Include="Views\Home\VPS.cshtml" />
+    <Content Include="Views\Home\Files.cshtml" />
+    <Content Include="Views\Home\MorningReading.cshtml" />
+    <Content Include="Views\Home\_MorningReading.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\Employee_Images\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -74,7 +74,7 @@
                     $.each(responseData.SummaryByGender,
                         function(i, v) {
                             var tmpObj = {
-                                name: $.trim(v.Key) == 1 ? "男" : "女",
+                                name: $.trim(v.Key) == 1 ? "Male" : "Female",
                                 value: $.trim(v.Value)
                             };
                             genderData.push(tmpObj);

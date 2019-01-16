@@ -1,0 +1,362 @@
+﻿
+@{
+    ViewBag.Title = "VPS Use Statistic";
+
+
+}
+
+<div id="container" style="overflow-x: hidden; overflow-y: auto">
+    <div id="spinner" class="spinner"></div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="network_in_out" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="network_track" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="mem" style="width: 100%; height: 0px;"></div>
+        </div>
+        <div class="col-lg-6">
+            <div id="disk_read_write" style="width: 100%; height: 0px;"></div>
+        </div>
+
+        <div class="col-lg-12">
+            <div id="proc" style="width: 100%; height: 0px;"></div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+
+    <script src="~/Scripts/plugins/eChart/echarts.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/shine.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/infographic.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/macarons.js"></script>
+    <script src="~/Scripts/plugins/eChart/theme/roma.js"></script>
+    <script type="text/javascript">
+        var containerHeight = $(window).height() - 180;
+
+        var timestamp = [];
+
+        var network_in = [];
+        var network_out = [];
+        var network_conntrack = [];
+
+        var disk_read = [];
+        var disk_write = [];
+
+        var mem_alloc = [];
+        var mem_used = [];
+        var num_proc = [];
+
+        $(function () {
+            $('#container').css('max-height', containerHeight + 58);
+            $('#container').css('min-height', containerHeight + 58);
+            $('#container').css('height', containerHeight+58);
+            $(window).resize(function(e) {
+                window.setTimeout(function() {
+                    containerHeight = $(window).height() - 180;
+                    $('#container').css('max-height', containerHeight + 58);
+                    $('#container').css('min-height', containerHeight + 58);
+                    $('#container').css('height',containerHeight+58);
+                        //$('#grid').height(gridHeight);
+                        //$('.k-grid-content').height(gridHeight - 68);
+                    },
+                    200);
+            });
+            // 基于准备好的dom，初始化echarts实例
+
+            loadChartsData();
+
+
+        });
+        function loadChartsData() {
+            $('#spinner').css('display','block');
+            $.ajax({
+                async: true,
+                data: 'json',
+                type: 'post',
+                url: "@Url.Action("GetVPSData")",
+                success: function(data) {
+                    var responseData = data.Data;
+                    $.each(responseData,
+                        function(i, v) {
+                            timestamp.push(new Date(parseInt(v.Timestamp)*1000).Format("yyyy-MM-dd hh:mm:ss"));
+                            network_in.push((parseInt(v.NetworkInBytes) /8/1000/1000).toFixed(2));
+                            network_out.push((parseInt(v.NetworkOutBytes)/8/1000/1000).toFixed(2));
+                            network_conntrack.push(v.NetworkConntrack);
+                            disk_read.push(parseInt((v.DiskReadBytes) / 8 /1000 ).toFixed(2));
+                            disk_write.push(parseInt((v.DiskWriteBytes) / 8 /1000).toFixed(2));
+                            mem_alloc.push(parseInt((v.MemAllocKbytes) / 1024).toFixed(2) );
+                            mem_used.push((parseInt(v.MemUsedKbytes) / 1024).toFixed(2));
+
+                            num_proc.push(parseInt(v.Numproc));
+                        });
+
+                    $('#network_in_out,#disk_read_write,#network_track,#proc,#mem').css('height', '400px');
+                    generateCharts();
+                },
+                complete: function() {
+                    $('#spinner').css('display','none');
+                }
+            });
+        }
+        function generateCharts() {
+            // 使用刚指定的配置项和数据显示图表。
+            var network_in_outChart = echarts.init(document.getElementById('network_in_out'));
+            var network_trackChart = echarts.init(document.getElementById('network_track'),'shine');
+            var disk_write_readChart = echarts.init(document.getElementById('disk_read_write'));
+            var memChart = echarts.init(document.getElementById('mem'));
+            var procChart = echarts.init(document.getElementById('proc'));
+
+            var networIoOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Network I/O',
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: timestamp
+                },
+                yAxis: {
+                    type: 'value',
+                    //boundaryGap: [0, '100%']
+                },
+
+                series: [
+                    {
+                        name: 'IN',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        itemStyle: {
+                            color: 'rgb(0, 70, 131)'
+                        },
+                        data: network_in
+                    },
+                    {
+                        name: 'OUT',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        data: network_out,
+
+        }
+                ]
+            };
+            var trackOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Network Connections',
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: timestamp
+                },
+                yAxis: {
+                    type: 'value',
+                    //boundaryGap: [0, '100%']
+                },
+
+                series: [
+                    {
+                        name: 'IN',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        data: network_conntrack
+                    }
+
+                ]
+            };
+            var diskOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Storage I/O',
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: timestamp
+                },
+                yAxis: {
+                    type: 'value',
+                    //boundaryGap: [0, '100%']
+                },
+
+                series: [
+                    {
+                        name: 'Write',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        itemStyle: {
+                            color: 'rgb(0, 70, 131)'
+                        },
+                        data: disk_write
+                    },
+                    {
+                        name: 'Read',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        data: disk_read,
+
+        }
+                ]
+            };
+            var memOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Memory Usage',
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: timestamp
+                },
+                yAxis: {
+                    type: 'value',
+                    //boundaryGap: [0, '100%']
+                },
+
+                series: [
+                    {
+                        name: 'Allocated',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        //itemStyle: {
+                        //    color: 'rgb(0, 70, 131)'
+                        //},
+                        data: mem_alloc
+                    },
+                    {
+                        name: 'Usage',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        //sampling: 'average',
+                        data: mem_used,
+
+                    }
+                ]
+            };
+            var procOption = {
+                tooltip: {
+                    trigger: 'axis',
+                    position: function(pt) {
+                        return [pt[0], '10%'];
+                    }
+                },
+                title: {
+                    left: 'center',
+                    text: 'Number of processes',
+                },
+                toolbox: {
+                    feature: {
+                        dataZoom: {
+                            yAxisIndex: 'none'
+                        },
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: timestamp
+                },
+                yAxis: {
+                    type: 'value',
+                    //boundaryGap: [0, '100%']
+                },
+
+                series: [
+                    {
+                        name: 'Number',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        data: num_proc
+                    }
+
+                ]
+            };
+
+            network_in_outChart.setOption(networIoOption);
+            network_trackChart.setOption(trackOption);
+            disk_write_readChart.setOption(diskOption);
+            memChart.setOption(memOption);
+            procChart.setOption(procOption);
+        }
+    </script>
+}

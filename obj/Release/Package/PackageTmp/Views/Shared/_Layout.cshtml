@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
+
     @Styles.Render("~/Content/css")
     <link href="~/Content/font-awesome.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/modernizr")
@@ -21,6 +22,8 @@
                 <li class="nav-item active">@Html.ActionLink("Home", "Index", "Home", new { @class = "nav-link" })</li>
 
                 <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { @class = "nav-link" })</li>
+                <li class="nav-item">@Html.ActionLink("VPS", "VPS", "Home", new { @class = "nav-link" })</li>
+
                 <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { @class = "nav-link" })</li>
             </ul>
         </div>
@@ -29,13 +32,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p style="text-align:center">&copy;2018-12 ~ @DateTime.Now.ToString("yyyy-MM") Powered By XianWei Zhang</p>
+            <p style="text-align:center">&copy;2018-12 ~ @DateTime.Now.ToString("yyyy-MM")  <span style="font-weight: 600">Powered By XianWei Zhang</span> </p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-
+    <script src="~/Scripts/plugins/DateFormat/DateHelpler.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -74,17 +74,19 @@
                     $('#spinner').css('display', 'none');
                     $('#contactContainer').css('visibility', 'visible');
                     $('#contactTable').DataTable(
-                        {
-                            "order": [[1, 'asc']]
+                        {                      
+                            "order": [[8, 'desc']],
+                            "order": [[4, 'asc']]
                         }
                     );
+                    //setTimeout(getAllEmployeePhoto(), 500);
                 });
         }
         function mouseHover(obj, isMouseOver)
         {
             if (isMouseOver) {
                 //$(obj).find('div.bigPhoto').css('display', 'block');
-                $(obj).find('img').removeAttr('style');
+                $(obj).find('img').css({'width':'100px','height':'120px','border-radius':'50%'});
             } else {
                 //$(obj).find('div.bigPhoto').css('display', 'none');
                 $(obj).find('img').css({'width':'40px','height':'50px','border-radius':'50%'});
@@ -97,6 +99,20 @@
             if (keyCode == 13) {
                 loadContactData();
             }
+        }
+
+        function getAllEmployeePhoto() {
+            $.ajax({
+                url: "@Url.Action("GetAllEmployeePhoto")",
+                dataType: 'json',
+                type: 'POST',
+                success: function(data) {
+                    var responseData = JSON.parse(data);
+                    $(responseData).each(function(i, v) {
+                        console.log(v);
+                    });
+                }
+            });
         }
 
     </script>
